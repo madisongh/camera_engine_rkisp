@@ -6,16 +6,11 @@ SYSTEM_C_INCLUDES += $(ROOT_DIR)/xcore
 SYSTEM_C_INCLUDES += $(ROOT_DIR)/modules
 SYSTEM_C_INCLUDES += $(ROOT_DIR)/modules/rkisp
 SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp
-SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp/usr/include
-SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp/usr/include/drm
-SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp/usr/include/gstreamer-1.0
-SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp/usr/include/glib-2.0
-SYSTEM_C_INCLUDES += $(ROOT_DIR)/ext/rkisp/usr/include/glib-2.0/include
+SYSTEM_C_INCLUDES += $(call pkg-sys-includes,libdrm)
+SYSTEM_C_INCLUDES += $(call pkg-sys-includes,gstreamer-1.0)
+SYSTEM_C_INCLUDES += $(call pkg-sys-includes,glib-2.0)
 
 SYSTEM_C_INCLUDES += $(BUILD_OUTPUT_RKISP_INC)
-SYSTEM_C_INCLUDES += $(BUILD_OUTPUT_GLIB_INC)
-SYSTEM_C_INCLUDES += $(BUILD_OUTPUT_GLIB_INC)/include
-SYSTEM_C_INCLUDES += $(BUILD_OUTPUT_GSTREAMER_INC)
 
 SYSTEM_FLAGS += -DHAVE_CONFIG_H -DHAVE_RK_IQ=1 -DHAVE_RK_IQ=1
 
@@ -37,15 +32,15 @@ $(STATIC_TARGET_C_OBJ) $(STATIC_TARGET_CPP_OBJ): STATIC_TARGET_FLAG += -L$(BUILD
 all: $(STATIC_TARGET)
 $(STATIC_TARGET):$(STATIC_TARGET_C_OBJ) $(STATIC_TARGET_CPP_OBJ)
 	@mkdir -p $(dir $@)
-	@$(TARGET_AR) rcs $@ $^
+	$(Q)$(TARGET_AR) rcs $@ $^
 	$(call quiet-cmd-echo-build, AR, $@)
 $(STATIC_TARGET_C_OBJ):$(LOCAL_BUILD_DIR)/%.o:%.c
 	@mkdir -p $(dir $@)
-	@$(TARGET_GCC) $(STATIC_TARGET_CFLAG) $(STATIC_TARGET_FLAG) -c -fpic $< -o $@
+	$(Q)$(TARGET_GCC) $(STATIC_TARGET_CFLAG) $(STATIC_TARGET_FLAG) -c -fpic $< -o $@
 	$(call quiet-cmd-echo-build, GCC, $@)
 $(STATIC_TARGET_CPP_OBJ):$(LOCAL_BUILD_DIR)/%.o:%.cpp
 	@mkdir -p $(dir $@)
-	@$(TARGET_GPP) $(STATIC_TARGET_CPPFLAG) $(STATIC_TARGET_FLAG) -c -fpic $< -o $@
+	$(Q)$(TARGET_GPP) $(STATIC_TARGET_CPPFLAG) $(STATIC_TARGET_FLAG) -c -fpic $< -o $@
 	$(call quiet-cmd-echo-build, G++, $@)
 
 #$(eval $(call make-target-static-library, "test"))
@@ -53,9 +48,14 @@ $(STATIC_TARGET_CPP_OBJ):$(LOCAL_BUILD_DIR)/%.o:%.cpp
 #$(addsuffix , STATIC_LIB_SUFFIX, $(LOCAL_MODULE))
 #LOCAL_CFLAGS += $(addprefix -I , $(LOCAL_C_INCLUDES))
 
+ifeq ($(Q),)
+quiet-cmd-echo-build :=
+else
 define quiet-cmd-echo-build
-	@echo "  [$1]  $2"
+    @echo "  [$1]  $2"
 endef
+endif
+pkg-sys-includes = $(patsubst -I%,%,$(shell pkg-config --cflags-only-I $1))
 
 define build-static-library
 	@echo "enter build-static-library"$1

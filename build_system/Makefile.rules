@@ -33,6 +33,8 @@ $(shell mkdir -p $(BUILD_OUTPUT_STATIC_LIBS))
 $(shell mkdir -p $(BUILD_OUTPUT_SHARED_LIBS))
 $(shell mkdir -p $(BUILD_OUTPUT_BIN))
 
-define quiet-cmd-echo-build
-    ${Q}echo "  [$1]  $2"
-endef
+ifeq ($(V),1)
+export Q :=
+else
+export Q := @
+endif

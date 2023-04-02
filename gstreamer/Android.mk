@@ -45,8 +45,7 @@ LOCAL_SHARED_LIBRARIES := \
 	libgobject-2.0 \
 	libglib-2.0 \
 	libgstallocators-1.0 \
-	libgstvideo-1.0 \
-	libgstvideo4linux2
+	libgstvideo-1.0
 
 LOCAL_SHARED_LIBRARIES += \
     libdrm \

@@ -35,13 +35,13 @@ endif
 
 ifeq ($(ARCH),arm)
 define SET_EVERYTHING
-	@cp -rf $(CURDIR)/ext/rkisp/usr/lib32/* $(BUILD_OUTPUT_EXTERNAL_LIBS)/
-	@cp -rf $(CURDIR)/ext/rkisp/usr/include/glib-2.0-32/* $(BUILD_OUTPUT_GLIB_INC)/
+	#@cp -rf $(CURDIR)/ext/rkisp/usr/lib32/* $(BUILD_OUTPUT_EXTERNAL_LIBS)/
+	#@cp -rf $(CURDIR)/ext/rkisp/usr/include/glib-2.0-32/* $(BUILD_OUTPUT_GLIB_INC)/
 endef
 else
 define SET_EVERYTHING
-	@cp -rf $(CURDIR)/ext/rkisp/usr/lib64/* $(BUILD_OUTPUT_EXTERNAL_LIBS)/
-	@cp -rf $(CURDIR)/ext/rkisp/usr/include/glib-2.0-64/* $(BUILD_OUTPUT_GLIB_INC)/
+	#@cp -rf $(CURDIR)/ext/rkisp/usr/lib64/* $(BUILD_OUTPUT_EXTERNAL_LIBS)/
+	#@cp -rf $(CURDIR)/ext/rkisp/usr/include/glib-2.0-64/* $(BUILD_OUTPUT_GLIB_INC)/
 endef
 endif
 
@@ -56,8 +56,8 @@ endef
 
 .PHONY:all
 all:
-	@mkdir -p $(BUILD_OUTPUT_EXTERNAL_LIBS)
-	@mkdir -p $(BUILD_OUTPUT_GLIB_INC)
+	#@mkdir -p $(BUILD_OUTPUT_EXTERNAL_LIBS)
+	#@mkdir -p $(BUILD_OUTPUT_GLIB_INC)
 	$(SET_EVERYTHING)
 	$(BUILD_EVERYTHING)
 
